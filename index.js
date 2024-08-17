@@ -43,10 +43,28 @@ async function run() {
     })
 
     app.get("/user", async(req,res) => {
-      const phone =  req.body;
-     
-      console.log(phone)
+    
       const result = await usersCollection.find().toArray()
+      res.send(result)
+    })
+
+    app.put("/user",async(req,res) => {
+      const data = req.body
+      const filter = {email : data.email}
+      const updateData  = {
+       $set : {
+        status : data.status,
+        balance : data.balance
+       }
+      }
+      const result = await usersCollection.updateOne(filter,updateData)
+      res.send(result.status = data.status)
+    })
+
+    app.get("/user/:email", async(req,res)=>{
+      const email = req.params.email
+      const filter = { email : email}
+      const result = await usersCollection.findOne(filter)
       res.send(result)
     })
 
